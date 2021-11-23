@@ -25,7 +25,7 @@ function NavBar() {
 
   return (
     <>
-      <div className="flex w-full py-6 fixed bg-alpha shadow-lg z-10 backdrop-filter backdrop-blur-xl md:justify-around justify-start">
+      <div className="flex w-full py-6 fixed bg-alpha shadow-lg backdrop-filter backdrop-blur-xl md:justify-around justify-start">
         <div className="font-oleo text-3xl ml-6 md:mx-0">User and Profile</div>
         <div className="hidden md:flex md:gap-10">
           {navItems.map((nav) => (
@@ -47,7 +47,7 @@ function NavBar() {
         onClick={() => setToggled((t) => !t)}
         className="text-red-200 backdrop-filter backdrop-blur-md z-0 fixed bottom-6 right-4 bg-alpha p-4 rounded-md md:hidden "
       >
-        <img src={`/icons/${toggled ? "cancel" : "toggle"}.svg`} />
+        <img src={`/icons/${toggled ? "cancel" : "toggle"}.svg`} alt="..." />
       </div>
     </>
   );

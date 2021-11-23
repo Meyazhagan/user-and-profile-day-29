@@ -18,19 +18,19 @@ function App() {
     setUsers(users);
   };
 
-  const getUser = async (id) => {
-    const user = await UserData.get(id);
-    return user;
-  };
+  // const getUser = async (id) => {
+  //   const user = await UserData.get(id);
+  //   return user;
+  // };
 
   const handleCreateUser = async (newUser) => {
     const prevUsers = users;
     try {
       const newUsers = [newUser, ...users];
       setUsers(newUsers);
-      const res = await UserData.create(newUser);
+      await UserData.create(newUser);
     } catch (err) {
-      const message = "Cannot add users";
+      // const message = "Cannot add users";
       setUsers(prevUsers);
     }
   };
@@ -41,9 +41,10 @@ function App() {
       const index = newUsers.findIndex((u) => u.id === id);
       newUsers[index] = user;
       setUsers(newUsers);
-      const res = await UserData.update(id, user);
+      // const res =
+      await UserData.update(id, user);
     } catch (err) {
-      const message = "Cannot update users";
+      // const message = "Cannot update users";
       setUsers(prevUsers);
     }
   };
@@ -54,9 +55,10 @@ function App() {
       const index = newUsers.findIndex((u) => u.id === id);
       newUsers.splice(index, 1);
       setUsers(newUsers);
-      const res = await UserData.delete(id, user);
+      // const res =
+      await UserData.delete(id, user);
     } catch (err) {
-      const message = "Cannot delete users";
+      // const message = "Cannot delete users";
       setUsers(prevUsers);
     }
   };
@@ -67,9 +69,10 @@ function App() {
       const index = newUsers.findIndex((u) => u.id === userId);
       const newUser = newUsers[index]?.profiles?.push(newProfile);
       setUsers(newUsers);
-      const res = await UserData.update(userId, newUser);
+      // const res =
+      await UserData.update(userId, newUser);
     } catch (err) {
-      const message = "Cannot delete users";
+      // const message = "Cannot delete users";
       setUsers(prevUsers);
     }
   };

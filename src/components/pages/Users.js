@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import UserCard from "../app/UserCard";
-import { Link } from "react-router-dom";
-import { Route, Routes } from "react-router";
-import Profiles from "./Profiles";
 
 function Users({ users, onDelete }) {
   return (
@@ -12,7 +9,7 @@ function Users({ users, onDelete }) {
           Add New User
         </button>
       </div>
-      <div className="grid grid-cols-12 gap-4 ">
+      <div className="grid grid-cols-12 gap-10 ">
         {users.map((user) => (
           <UserCard
             key={user.id}

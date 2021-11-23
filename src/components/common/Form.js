@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import Joi, { errors } from "joi-browser";
 
-const Input = ({ id, label, value, error, ...rest }) => {
-  return (
-    <div className="flex">
-      <label htmlFor={id} className="">
-        {label}
-      </label>
-      <input type="text" className="" id={id} value={value} {...rest} />
-    </div>
-  );
-};
+// const Input = ({ id, label, value, error, ...rest }) => {
+//   return (
+//     <div className="flex">
+//       <label htmlFor={id} className="">
+//         {label}
+//       </label>
+//       <input type="text" className="" id={id} value={value} {...rest} />
+//     </div>
+//   );
+// };
 
 function Form({ initialValue, fields = [], title, schema }) {
   const [value, setValue] = useState(initialValue);

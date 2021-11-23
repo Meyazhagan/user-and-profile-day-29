@@ -25,10 +25,12 @@ const remove = async (id) => {
   return res;
 };
 
-export default {
+const methods = {
   getALl,
   get,
   create: post,
   update: put,
   delete: remove,
 };
+
+export default methods;

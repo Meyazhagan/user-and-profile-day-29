@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Properity = ({ list }) => {};
+// const Properity = ({ list }) => {};
 
 const IconButton = ({ src, tooltip, onClick }) => {
   return (
@@ -18,7 +18,7 @@ const IconButton = ({ src, tooltip, onClick }) => {
 };
 
 function UserCard(props) {
-  const { name, email, id, avatar, onDelete, phone, location, classes } = props;
+  const { name, email, id, onDelete, phone, location, classes } = props;
 
   const [liked, setLiked] = useState(false);
   // const history = useHistory();
