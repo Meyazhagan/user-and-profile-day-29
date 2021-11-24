@@ -3,7 +3,7 @@ import UserCard from "../app/UserCard";
 
 function Users({ users, onDelete }) {
   return (
-    <div className="mx-10 md:mx-20 lg:mx-30">
+    <div className="mx-5 sm:mx-10 md:mx-20 lg:mx-30">
       <div className="flex justify-end p-6">
         <button className="border-2 border-accent text-accent  p-2 rounded-md">
           Add New User
