@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 
-import UserData from "./Data/User";
+import UserData from "./Data/UserServices";
 import NavBar from "./components/app/NavBar";
 import Profiles from "./components/pages/Profiles";
 import Users from "./components/pages/Users";
@@ -13,8 +13,9 @@ import Home from "./components/pages/Home";
 
 function App() {
   const [users, setUsers] = useState([]);
-  const getALlUser = async () => {
-    const users = await UserData.getALl();
+  const getALlUser = () => {
+    const users = UserData.getALl();
+    console.log(UserData.getALl());
     setUsers(users);
   };
 
@@ -28,10 +29,11 @@ function App() {
     try {
       const newUsers = [newUser, ...users];
       setUsers(newUsers);
-      await UserData.create(newUser);
+      // await UserData.create(newUser);
     } catch (err) {
+      console.log(err);
       // const message = "Cannot add users";
-      setUsers(prevUsers);
+      // setUsers(prevUsers);
     }
   };
   const handleUpdateUser = async (id, user) => {
@@ -42,7 +44,7 @@ function App() {
       newUsers[index] = user;
       setUsers(newUsers);
       // const res =
-      await UserData.update(id, user);
+      // await UserData.update(id, user);
     } catch (err) {
       // const message = "Cannot update users";
       setUsers(prevUsers);
@@ -56,7 +58,7 @@ function App() {
       newUsers.splice(index, 1);
       setUsers(newUsers);
       // const res =
-      await UserData.delete(id, user);
+      // await UserData.delete(id, user);
     } catch (err) {
       // const message = "Cannot delete users";
       setUsers(prevUsers);
@@ -70,7 +72,7 @@ function App() {
       const newUser = newUsers[index]?.profiles?.push(newProfile);
       setUsers(newUsers);
       // const res =
-      await UserData.update(userId, newUser);
+      // await UserData.update(userId, newUser);
     } catch (err) {
       // const message = "Cannot delete users";
       setUsers(prevUsers);
