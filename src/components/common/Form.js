@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import React, { useState } from "react";
 
 function Form(props) {
@@ -12,6 +13,7 @@ function Form(props) {
   } = props;
   const [value, setValue] = useState(initialValue);
   const [errors, setErrors] = useState({});
+  const [isValid, setIsValid] = useState(false);
 
   const handleValueChange = (e) => {
     const newValue = { ...value };
@@ -29,16 +31,15 @@ function Form(props) {
     onCancel();
   };
   const validateValue = (value) => {
-    const error = validator(value);
-    setErrors(error);
+    const errors = validator(value);
+    let isValid = Object.keys(errors).length === 0 ? true : false;
+    setErrors(errors);
+    setIsValid(isValid);
   };
-  // console.log(schema.validate({}));
+
   return (
     <form className="grid grid-cols-8 bg-alpha p-4 rounded-md max-w-md mx-4 md:mx-auto items-center gap-4">
       <div className="col-span-full text-center mb-4">{title}</div>
-      {/* {errors && (
-       
-      )} */}
       {fields.map(({ field, label, ...rest }, index) => (
         <React.Fragment key={index}>
           <label htmlFor={field} className="col-span-3">
@@ -75,10 +76,14 @@ function Form(props) {
           </button>
           <button
             onClick={(e) => handleSubmit(e)}
-            className="text-green-500 border-2 border-green-500 
-            rounded-md px-4 py-1
-            hover:bg-green-500 hover:text-white
-            focus:bg-green-500 focus:text-white"
+            disabled={!isValid}
+            className={classNames(
+              `text-green-500 border-2 border-green-500 
+                rounded-md px-4 py-1
+              hover:bg-green-500 hover:text-white
+              focus:bg-green-500 focus:text-white`,
+              { " opacity-70 cursor-not-allowed ": !isValid }
+            )}
           >
             {submitText}
           </button>

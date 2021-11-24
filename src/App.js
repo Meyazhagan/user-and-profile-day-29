@@ -15,71 +15,42 @@ function App() {
   const [users, setUsers] = useState([]);
   const getALlUser = () => {
     const users = UserData.getALl();
-    console.log(UserData.getALl());
     setUsers(users);
   };
 
-  // const getUser = async (id) => {
-  //   const user = await UserData.get(id);
-  //   return user;
-  // };
+  const getUser = (id) => {
+    const index = users.findIndex((u) => u.id === id);
+    return { ...users[index] };
+  };
 
-  const handleCreateUser = async (newUser) => {
-    const prevUsers = users;
-    try {
-      const newUsers = [newUser, ...users];
-      setUsers(newUsers);
-      // await UserData.create(newUser);
-    } catch (err) {
-      console.log(err);
-      // const message = "Cannot add users";
-      // setUsers(prevUsers);
-    }
+  const handleCreateUser = (newUser) => {
+    const newUsers = [newUser, ...users];
+    setUsers(newUsers);
+    UserData.update(newUsers);
   };
-  const handleUpdateUser = async (id, user) => {
-    const prevUsers = users;
-    try {
-      const newUsers = [...users];
-      const index = newUsers.findIndex((u) => u.id === id);
-      newUsers[index] = user;
-      setUsers(newUsers);
-      // const res =
-      // await UserData.update(id, user);
-    } catch (err) {
-      // const message = "Cannot update users";
-      setUsers(prevUsers);
-    }
+  const handleUpdateUser = (id, user) => {
+    const newUsers = [...users];
+    const index = newUsers.findIndex((u) => u.id === id);
+    newUsers[index] = { ...newUsers[index], ...user };
+    setUsers(newUsers);
+    UserData.update(newUsers);
   };
-  const handleDeleteUser = async (id, user) => {
-    const prevUsers = users;
-    try {
-      const newUsers = [...users];
-      const index = newUsers.findIndex((u) => u.id === id);
-      newUsers.splice(index, 1);
-      setUsers(newUsers);
-      // const res =
-      // await UserData.delete(id, user);
-    } catch (err) {
-      // const message = "Cannot delete users";
-      setUsers(prevUsers);
-    }
+  const handleDeleteUser = (id) => {
+    const newUsers = [...users];
+    const index = newUsers.findIndex((u) => u.id === id);
+    newUsers.splice(index, 1);
+    setUsers(newUsers);
+    UserData.update(newUsers);
   };
-  const handleCreateProfile = async (userId, newProfile) => {
-    const prevUsers = users;
-    try {
-      const newUsers = [...users];
-      const index = newUsers.findIndex((u) => u.id === userId);
-      const newUser = newUsers[index]?.profiles?.push(newProfile);
-      setUsers(newUsers);
-      // const res =
-      // await UserData.update(userId, newUser);
-    } catch (err) {
-      // const message = "Cannot delete users";
-      setUsers(prevUsers);
-    }
+  const handleCreateProfile = (userId, newProfile) => {
+    handleUpdateUser(userId, newProfile);
   };
-  const handleUpdateProfile = (userId, profile) => {};
-  const handleDeleteProfile = (userId) => {};
+  const handleUpdateProfile = (userId, profile) => {
+    handleUpdateUser(userId, profile);
+  };
+  const handleDeleteProfile = (userId) => {
+    handleUpdateUser(userId, { skill: [], role: [] });
+  };
   useEffect(() => {
     getALlUser();
   }, []);
@@ -91,7 +62,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route
             path="/profile/:userId"
-            element={<Profiles users={users} onDelete={handleDeleteProfile} />}
+            element={
+              <Profiles onDelete={handleDeleteProfile} getUser={getUser} />
+            }
           />
           <Route
             path="/users"
@@ -103,15 +76,19 @@ function App() {
           />
           <Route
             path="edit-user/:id"
-            element={<EditUser onUpdate={handleUpdateUser} />}
+            element={<EditUser onUpdate={handleUpdateUser} getUser={getUser} />}
           />
           <Route
             path="create-profile"
-            element={<CreateProfile onCreate={handleCreateProfile} />}
+            element={
+              <CreateProfile onCreate={handleCreateProfile} getUser={getUser} />
+            }
           />
           <Route
-            path="edit-profile/:id"
-            element={<EditProfile onUpdate={handleUpdateProfile} />}
+            path="edit-profile/:userId"
+            element={
+              <EditProfile onUpdate={handleUpdateProfile} getUser={getUser} />
+            }
           />
         </Routes>
       </div>

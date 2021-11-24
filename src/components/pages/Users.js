@@ -19,7 +19,7 @@ function Users({ users, onDelete }) {
       <div className="flex justify-end p-6">
         <button
           onClick={handleCreateUser}
-          className="border-2 border-accent text-accent  p-2 rounded-md"
+          className="flex gap-2 border-2 border-accent text-accent py-2 px-4 rounded-md hover:bg-accent hover:text-dark"
         >
           Add New User
         </button>
