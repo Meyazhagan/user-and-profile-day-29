@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
+import { snackbar } from "tailwind-toast";
 
-import UserData from "./Data/User";
+import UserData from "./Data/UserServices";
 import NavBar from "./components/app/NavBar";
 import Profiles from "./components/pages/Profiles";
 import Users from "./components/pages/Users";
@@ -11,73 +12,93 @@ import EditProfile from "./components/pages/EditProfile";
 import EditUser from "./components/pages/EditUser";
 import Home from "./components/pages/Home";
 
+const toastProps = (color) => {
+  return {
+    color: `bg-${color}`,
+    positionX: "end",
+    positionY: "top",
+    duration: 4000,
+    speed: 500,
+    // fontColor: "gray",
+    // fontTone: 900,
+  };
+};
+
 function App() {
   const [users, setUsers] = useState([]);
-  const getALlUser = async () => {
-    const users = await UserData.getALl();
+  const getALlUser = () => {
+    const users = UserData.getALl();
     setUsers(users);
   };
 
-  // const getUser = async (id) => {
-  //   const user = await UserData.get(id);
-  //   return user;
-  // };
+  const getUser = (id) => {
+    const index = users.findIndex((u) => u.id === id);
+    return { ...users[index] };
+  };
 
-  const handleCreateUser = async (newUser) => {
+  const handleCreateUser = (newUser) => {
     const prevUsers = users;
-    try {
-      const newUsers = [newUser, ...users];
-      setUsers(newUsers);
-      await UserData.create(newUser);
-    } catch (err) {
-      // const message = "Cannot add users";
-      setUsers(prevUsers);
-    }
+    const addInfo = {
+      id: UserData.genId().next().value,
+      skill: [],
+      profile: [],
+    };
+    const newUsers = [{ ...addInfo, ...newUser }, ...users];
+    setUsers(newUsers);
+    UserData.update(newUsers);
+    snackbar()
+      .success("Hey!", "You successfully Create the User!")
+      .with(toastProps("green-500"))
+      .addButtons({
+        undo: () => {
+          setUsers(prevUsers);
+        },
+      })
+      .show();
   };
-  const handleUpdateUser = async (id, user) => {
+  const handleUpdateUser = (id, user) => {
     const prevUsers = users;
-    try {
-      const newUsers = [...users];
-      const index = newUsers.findIndex((u) => u.id === id);
-      newUsers[index] = user;
-      setUsers(newUsers);
-      // const res =
-      await UserData.update(id, user);
-    } catch (err) {
-      // const message = "Cannot update users";
-      setUsers(prevUsers);
-    }
+    const newUsers = [...users];
+    const index = newUsers.findIndex((u) => u.id === id);
+    newUsers[index] = { ...newUsers[index], ...user };
+    setUsers(newUsers);
+    UserData.update(newUsers);
+    snackbar()
+      .warning("Hey!", "You successfully updated the User!")
+      .with(toastProps("green-500"))
+      .addButtons({
+        undo: () => {
+          setUsers(prevUsers);
+        },
+      })
+      .show();
   };
-  const handleDeleteUser = async (id, user) => {
+  const handleDeleteUser = (id) => {
     const prevUsers = users;
-    try {
-      const newUsers = [...users];
-      const index = newUsers.findIndex((u) => u.id === id);
-      newUsers.splice(index, 1);
-      setUsers(newUsers);
-      // const res =
-      await UserData.delete(id, user);
-    } catch (err) {
-      // const message = "Cannot delete users";
-      setUsers(prevUsers);
-    }
+    const newUsers = [...users];
+    const index = newUsers.findIndex((u) => u.id === id);
+    newUsers.splice(index, 1);
+    setUsers(newUsers);
+    UserData.update(newUsers);
+    snackbar()
+      .danger("Hey!", "You successfully deleted the User!")
+      .with(toastProps("red-500"))
+      .addButtons({
+        undo: () => {
+          setUsers(prevUsers);
+        },
+      })
+      .show();
   };
-  const handleCreateProfile = async (userId, newProfile) => {
-    const prevUsers = users;
-    try {
-      const newUsers = [...users];
-      const index = newUsers.findIndex((u) => u.id === userId);
-      const newUser = newUsers[index]?.profiles?.push(newProfile);
-      setUsers(newUsers);
-      // const res =
-      await UserData.update(userId, newUser);
-    } catch (err) {
-      // const message = "Cannot delete users";
-      setUsers(prevUsers);
-    }
+  const handleCreateProfile = (userId, newProfile) => {
+    handleUpdateUser(userId, newProfile);
   };
-  const handleUpdateProfile = (userId, profile) => {};
-  const handleDeleteProfile = (userId) => {};
+  const handleUpdateProfile = (userId, profile) => {
+    handleUpdateUser(userId, profile);
+  };
+  const handleDeleteProfile = (userId) => {
+    handleUpdateUser(userId, { skill: [], role: [] });
+  };
   useEffect(() => {
     getALlUser();
   }, []);
@@ -89,7 +110,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route
             path="/profile/:userId"
-            element={<Profiles users={users} onDelete={handleDeleteProfile} />}
+            element={
+              <Profiles onDelete={handleDeleteProfile} getUser={getUser} />
+            }
           />
           <Route
             path="/users"
@@ -101,15 +124,19 @@ function App() {
           />
           <Route
             path="edit-user/:id"
-            element={<EditUser onUpdate={handleUpdateUser} />}
+            element={<EditUser onUpdate={handleUpdateUser} getUser={getUser} />}
           />
           <Route
-            path="create-profile"
-            element={<CreateProfile onCreate={handleCreateProfile} />}
+            path="create-profile/:userId"
+            element={
+              <CreateProfile onCreate={handleCreateProfile} getUser={getUser} />
+            }
           />
           <Route
-            path="edit-profile/:id"
-            element={<EditProfile onUpdate={handleUpdateProfile} />}
+            path="edit-profile/:userId"
+            element={
+              <EditProfile onUpdate={handleUpdateProfile} getUser={getUser} />
+            }
           />
         </Routes>
       </div>

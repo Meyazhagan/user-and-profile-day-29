@@ -1,24 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import IconButton from "../common/IconButton";
 
 // const Properity = ({ list }) => {};
 
-const IconButton = ({ src, tooltip, onClick }) => {
-  return (
-    <button
-      onClick={onClick}
-      className="hover:bg-alpha rounded-md p-4 group relative"
-    >
-      <img src={src} alt="" />
-      <span className="hidden group-hover:block absolute bg-gray-900 top-full left-full w-max px-2 rounded">
-        {tooltip}
-      </span>
-    </button>
-  );
-};
-
 function UserCard(props) {
-  const { name, email, id, onDelete, phone, location, classes } = props;
+  const { avatar, name, email, id, onDelete, phone, location, classes } = props;
 
   const [liked, setLiked] = useState(false);
   // const history = useHistory();
@@ -29,7 +16,7 @@ function UserCard(props) {
       <section className="bg-alpha p-3 rounded-2xl h-full">
         <div className="flex">
           <img
-            src={"/images/resized.jpg"}
+            src={avatar}
             className="h-40 w-40 rounded-xl shadow object-cover "
             alt={name}
           />
