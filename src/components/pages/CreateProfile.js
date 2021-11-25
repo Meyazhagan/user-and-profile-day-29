@@ -1,32 +1,46 @@
-import classNames from "classnames";
-import React, { useState } from "react";
-import Select from "../common/Select";
+import React from "react";
+import { useNavigate, useParams } from "react-router";
+import {
+  skillOptions,
+  roleOptions,
+  validate,
+} from "../../Data/ProfileServices";
+import SelectForm from "../common/SelectForm";
 
-const skillOptions = [
-  "HTML",
-  "CSS",
-  "JS",
-  "REACT",
-  "NODE JS",
-  "EXPRESS",
-  "MONGODB",
-  "MONGOOSE",
-  "MYSQL",
-  "AWS",
-];
-const roleOptions = ["STUDENT", "MENTOR", "EVENT MANAGER", "PLACEMENT TEAM"];
-
-function CreateProfile() {
-  const [profile, setProfile] = useState([]);
-
+function CreateProfile({ onCreate }) {
+  const navigate = useNavigate();
+  const params = useParams();
+  const userId = params.userId;
+  const handleSubmit = (profile) => {
+    onCreate(userId, profile);
+    navigate(`/profile/${userId}`);
+  };
+  const handleCancel = () => {
+    navigate(`/profile/${userId}`);
+  };
   return (
     <div className="w-md">
-      <SelectForm 
-        selectList={[{label:"Skill", multiple:true, listItems:skillOptions}, 
-        {label:"Skill", multiple:true, listItems:skillOptions}]} 
-        submitText={} 
-        initialValue={} 
-        validator={}/>
+      <SelectForm
+        selectList={[
+          {
+            label: "Skill",
+            multiple: true,
+            listItems: skillOptions,
+            field: "skill",
+          },
+          {
+            label: "Role",
+            multiple: false,
+            listItems: roleOptions,
+            field: "role",
+          },
+        ]}
+        submitText="Create"
+        initialValue={{ skill: [], role: [] }}
+        validator={validate}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+      />
     </div>
   );
 }

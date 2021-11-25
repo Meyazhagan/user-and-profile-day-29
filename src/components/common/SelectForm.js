@@ -1,18 +1,62 @@
-import React from "react";
+import classNames from "classnames";
+import React, { useState } from "react";
 
-function SelectFrom({ selectList, submitText, initialValue }) {
+import Select from "../common/Select";
+function SelectForm({
+  selectList,
+  submitText,
+  initialValue,
+  validator,
+  onSubmit,
+  onCancel,
+}) {
+  const [value, setValue] = useState(initialValue || {});
+  const [errors, setErrors] = useState({});
+  const [isValid, setIsValid] = useState(false);
+
+  const handleValueChange = (field, selectedList) => {
+    const newValue = { ...value, [field]: selectedList };
+    // newValue[e.target.name] = e.target.value;
+    validateValue(newValue);
+    setValue(newValue);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(value);
+  };
+  const handleCancel = (e) => {
+    e.preventDefault();
+    onCancel();
+  };
+  const validateValue = (value) => {
+    const errors = validator(value);
+    let isValid = Object.keys(errors).length === 0 ? true : false;
+    setErrors(errors);
+    setIsValid(isValid);
+    return isValid;
+  };
   return (
-    <form className="w-5/6 lg:w-4/6  mx-auto">
-      <Select
-        label="Skill"
-        listItems={skillOptions}
-        multiple={true}
-        onChange={(e, selected) => setSelected(selected)}
-      />
-      {errors[field] && <div className="text-red-400">{errors[field]}</div>}
+    <form className="w-5/6 md:w-3/6  mx-auto">
+      {selectList.map((list, index) => (
+        <div key={index}>
+          <Select
+            label={list.label}
+            listItems={list.listItems}
+            multiple={list.multiple}
+            onChange={(e, selectedList) =>
+              handleValueChange(list.field, selectedList)
+            }
+            initialValue={initialValue[list.field]}
+          />
+          {errors[list.field] && (
+            <div className="text-red-400">{errors[list.field]}</div>
+          )}
+        </div>
+      ))}
       <div className="flex justify-end gap-6 mr-6">
         <button
-          // onClick={(e) => handleCancel(e)}
+          onClick={handleCancel}
           className="text-red-500
         border-2
         border-transparent
@@ -23,20 +67,21 @@ function SelectFrom({ selectList, submitText, initialValue }) {
           Cancel
         </button>
         <button
-          // onClick={(e) => handleSubmit(e)}
+          onClick={handleSubmit}
+          disabled={!isValid}
           className={classNames(
             `text-green-500 border-2 border-green-500 
             rounded-md px-4 py-1
           hover:bg-green-500 hover:text-white
-          focus:bg-green-500 focus:text-white`
-            // { " opacity-70 cursor-not-allowed ": !isValid }
+          focus:bg-green-500 focus:text-white`,
+            { " opacity-70 cursor-not-allowed ": !isValid }
           )}
         >
-          Create
+          {submitText}
         </button>
       </div>
     </form>
   );
 }
 
-export default SelectFrom;
+export default SelectForm;

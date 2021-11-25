@@ -27,7 +27,7 @@ function Profiles({ onDelete, getUser }) {
           back to user
         </button>
       </div>
-      <ProfileCard {...user} />
+      <ProfileCard {...user} onDelete={onDelete} />
     </div>
   );
 }

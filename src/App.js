@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
+import { snackbar } from "tailwind-toast";
 
 import UserData from "./Data/UserServices";
 import NavBar from "./components/app/NavBar";
@@ -10,6 +11,18 @@ import CreateProfile from "./components/pages/CreateProfile";
 import EditProfile from "./components/pages/EditProfile";
 import EditUser from "./components/pages/EditUser";
 import Home from "./components/pages/Home";
+
+const toastProps = (color) => {
+  return {
+    color: `bg-${color}`,
+    positionX: "end",
+    positionY: "top",
+    duration: 4000,
+    speed: 500,
+    // fontColor: "gray",
+    // fontTone: 900,
+  };
+};
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -24,23 +37,58 @@ function App() {
   };
 
   const handleCreateUser = (newUser) => {
-    const newUsers = [newUser, ...users];
+    const prevUsers = users;
+    const addInfo = {
+      id: UserData.genId().next().value,
+      skill: [],
+      profile: [],
+    };
+    const newUsers = [{ ...addInfo, ...newUser }, ...users];
     setUsers(newUsers);
     UserData.update(newUsers);
+    snackbar()
+      .success("Hey!", "You successfully Create the User!")
+      .with(toastProps("green-500"))
+      .addButtons({
+        undo: () => {
+          setUsers(prevUsers);
+        },
+      })
+      .show();
   };
   const handleUpdateUser = (id, user) => {
+    const prevUsers = users;
     const newUsers = [...users];
     const index = newUsers.findIndex((u) => u.id === id);
     newUsers[index] = { ...newUsers[index], ...user };
     setUsers(newUsers);
     UserData.update(newUsers);
+    snackbar()
+      .warning("Hey!", "You successfully updated the User!")
+      .with(toastProps("green-500"))
+      .addButtons({
+        undo: () => {
+          setUsers(prevUsers);
+        },
+      })
+      .show();
   };
   const handleDeleteUser = (id) => {
+    const prevUsers = users;
     const newUsers = [...users];
     const index = newUsers.findIndex((u) => u.id === id);
     newUsers.splice(index, 1);
     setUsers(newUsers);
     UserData.update(newUsers);
+    snackbar()
+      .danger("Hey!", "You successfully deleted the User!")
+      .with(toastProps("red-500"))
+      .addButtons({
+        undo: () => {
+          setUsers(prevUsers);
+        },
+      })
+      .show();
   };
   const handleCreateProfile = (userId, newProfile) => {
     handleUpdateUser(userId, newProfile);
@@ -79,7 +127,7 @@ function App() {
             element={<EditUser onUpdate={handleUpdateUser} getUser={getUser} />}
           />
           <Route
-            path="create-profile"
+            path="create-profile/:userId"
             element={
               <CreateProfile onCreate={handleCreateProfile} getUser={getUser} />
             }
