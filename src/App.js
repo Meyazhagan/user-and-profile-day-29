@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
-import { snackbar } from "tailwind-toast";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import UserData from "./Data/UserServices";
 import NavBar from "./components/app/NavBar";
@@ -11,18 +12,7 @@ import CreateProfile from "./components/pages/CreateProfile";
 import EditProfile from "./components/pages/EditProfile";
 import EditUser from "./components/pages/EditUser";
 import Home from "./components/pages/Home";
-
-const toastProps = (color) => {
-  return {
-    color: `bg-${color}`,
-    positionX: "end",
-    positionY: "top",
-    duration: 4000,
-    speed: 500,
-    // fontColor: "gray",
-    // fontTone: 900,
-  };
-};
+import ToastMessage from "./components/common/Toast";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -46,15 +36,12 @@ function App() {
     const newUsers = [{ ...addInfo, ...newUser }, ...users];
     setUsers(newUsers);
     UserData.update(newUsers);
-    snackbar()
-      .success("Hey!", "You successfully Create the User!")
-      .with(toastProps("green-500"))
-      .addButtons({
-        undo: () => {
-          setUsers(prevUsers);
-        },
-      })
-      .show();
+    toast.success(
+      <ToastMessage
+        messaage={"Created The User"}
+        onUndo={() => setUsers(prevUsers)}
+      />
+    );
   };
   const handleUpdateUser = (id, user) => {
     const prevUsers = users;
@@ -62,33 +49,26 @@ function App() {
     const index = newUsers.findIndex((u) => u.id === id);
     newUsers[index] = { ...newUsers[index], ...user };
     setUsers(newUsers);
-    UserData.update(newUsers);
-    snackbar()
-      .warning("Hey!", "You successfully updated the User!")
-      .with(toastProps("green-500"))
-      .addButtons({
-        undo: () => {
-          setUsers(prevUsers);
-        },
-      })
-      .show();
+    toast.info(
+      <ToastMessage
+        messaage={"Updated The User"}
+        onUndo={() => setUsers(prevUsers)}
+      />
+    );
   };
-  const handleDeleteUser = (id) => {
+  const handleDeleteUser = (id, message) => {
     const prevUsers = users;
     const newUsers = [...users];
     const index = newUsers.findIndex((u) => u.id === id);
     newUsers.splice(index, 1);
     setUsers(newUsers);
     UserData.update(newUsers);
-    snackbar()
-      .danger("Hey!", "You successfully deleted the User!")
-      .with(toastProps("red-500"))
-      .addButtons({
-        undo: () => {
-          setUsers(prevUsers);
-        },
-      })
-      .show();
+    toast.error(
+      <ToastMessage
+        messaage={"Deleted The User"}
+        onUndo={() => setUsers(prevUsers)}
+      />
+    );
   };
   const handleCreateProfile = (userId, newProfile) => {
     handleUpdateUser(userId, newProfile);
@@ -104,6 +84,7 @@ function App() {
   }, []);
   return (
     <div>
+      <ToastContainer position="top-right" autoClose={5000} theme="dark" />
       <NavBar />
       <div className="py-28">
         <Routes>

@@ -1,11 +1,13 @@
 module.exports = {
+  mode: "jit",
+  enabled: true,
   darkMode: "class",
   i18n: {
     locales: ["en-US"],
     defaultLocale: "en-US",
   },
   purge: {
-    content: ["./public/*.html", "./src/**/*.js"],
+    content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
     // These options are passed through directly to PurgeCSS
   },
   theme: {
@@ -37,7 +39,4 @@ module.exports = {
     },
   },
   plugins: [],
-  future: {
-    purgeLayersByDefault: true,
-  },
 };
