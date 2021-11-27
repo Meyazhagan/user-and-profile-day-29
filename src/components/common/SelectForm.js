@@ -62,7 +62,7 @@ function SelectForm({
         border-transparent
         rounded-md px-4 py-1
         hover:border-red-500
-        focus:border-red-500"
+        focus:border-red-500 focus:outline-none"
         >
           Cancel
         </button>
@@ -73,7 +73,7 @@ function SelectForm({
             `text-green-500 border-2 border-green-500 
             rounded-md px-4 py-1
           hover:bg-green-500 hover:text-white
-          focus:bg-green-500 focus:text-white`,
+          focus:bg-green-500 focus:text-white focus:outline-none`,
             { " opacity-70 cursor-not-allowed ": !isValid }
           )}
         >

@@ -1,6 +1,4 @@
 module.exports = {
-  mode: "jit",
-  enabled: true,
   darkMode: "class",
   i18n: {
     locales: ["en-US"],
@@ -12,9 +10,6 @@ module.exports = {
   },
   theme: {
     extend: {
-      backgroundImage: (theme) => ({
-        // check: "url('/icons/check.svg')",
-      }),
       fontFamily: {
         nunito: ["Nunito", "sans-serif"],
         oleo: ["Oleo Script Swash Caps", "cursive"],

@@ -13,6 +13,7 @@ import EditProfile from "./components/pages/EditProfile";
 import EditUser from "./components/pages/EditUser";
 import Home from "./components/pages/Home";
 import ToastMessage from "./components/common/Toast";
+import About from "./components/pages/About";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -119,6 +120,7 @@ function App() {
               <EditProfile onUpdate={handleUpdateProfile} getUser={getUser} />
             }
           />
+          <Route path="about" element={<About />} />
         </Routes>
       </div>
     </div>

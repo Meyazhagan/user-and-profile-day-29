@@ -38,7 +38,7 @@ function Form(props) {
   };
 
   return (
-    <form className="grid grid-cols-8 bg-alpha p-4 rounded-md max-w-md mx-4 md:mx-auto items-center gap-4">
+    <form className="grid grid-cols-8 bg-alpha p-4 rounded-md max-w-max mx-auto items-center gap-4">
       <div className="col-span-full text-center mb-4">{title}</div>
       {fields.map(({ field, label, ...rest }, index) => (
         <React.Fragment key={index}>
@@ -53,7 +53,7 @@ function Form(props) {
               value={value[field]}
               id={field}
               name={field}
-              className="appearance-none bg-alpha  rounded-md py-2 px-4 focus:ring-2 ring-accent border-0 outline-none"
+              className="appearance-none bg-alpha  rounded-md py-2 px-4 focus:ring-4 ring-accent ring-opacity-70 w-full  border-0 outline-none"
             />
             {errors[field] && (
               <div className="text-red-400">{errors[field]}</div>
@@ -70,7 +70,7 @@ function Form(props) {
             border-transparent
             rounded-md px-4 py-1
             hover:border-red-500
-            focus:border-red-500"
+            focus:border-red-500 focus:outline-none"
           >
             Cancel
           </button>
@@ -78,11 +78,15 @@ function Form(props) {
             onClick={(e) => handleSubmit(e)}
             disabled={!isValid}
             className={classNames(
-              `text-green-500 border-2 border-green-500 
+              `border-2
                 rounded-md px-4 py-1
               hover:bg-green-500 hover:text-white
-              focus:bg-green-500 focus:text-white`,
-              { " opacity-70 cursor-not-allowed ": !isValid }
+              focus:bg-green-500 focus:text-white focus:outline-none`,
+              {
+                "opacity-70 text-green-700 border-green-700  cursor-not-allowed ":
+                  !isValid,
+                "border-green-500 text-green-500": isValid,
+              }
             )}
           >
             {submitText}
